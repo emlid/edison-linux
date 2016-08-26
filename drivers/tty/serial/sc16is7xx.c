@@ -661,10 +661,6 @@ static void sc16is7xx_tx_proc(struct kthread_work *ws)
 {
 	struct uart_port *port = &(to_sc16is7xx_one(ws, tx_work)->port);
 
-	if ((port->rs485.flags & SER_RS485_ENABLED) &&
-	    (port->rs485.delay_rts_before_send > 0))
-		msleep(port->rs485.delay_rts_before_send);
-
 	sc16is7xx_handle_tx(port);
 }
 
@@ -842,45 +838,6 @@ static void sc16is7xx_set_termios(struct uart_port *port,
 	uart_update_timeout(port, termios->c_cflag, baud);
 }
 
-static int sc16is7xx_config_rs485(struct uart_port *port,
-				  struct serial_rs485 *rs485)
-{
-	const u32 mask = SC16IS7XX_EFCR_AUTO_RS485_BIT |
-			 SC16IS7XX_EFCR_RTS_INVERT_BIT;
-	u32 efcr = 0;
-
-	if (rs485->flags & SER_RS485_ENABLED) {
-		bool rts_during_rx, rts_during_tx;
-
-		rts_during_rx = rs485->flags & SER_RS485_RTS_AFTER_SEND;
-		rts_during_tx = rs485->flags & SER_RS485_RTS_ON_SEND;
-
-		efcr |= SC16IS7XX_EFCR_AUTO_RS485_BIT;
-
-		if (!rts_during_rx && rts_during_tx)
-			/* default */;
-		else if (rts_during_rx && !rts_during_tx)
-			efcr |= SC16IS7XX_EFCR_RTS_INVERT_BIT;
-		else
-			dev_err(port->dev,
-				"unsupported RTS signalling on_send:%d after_send:%d - exactly one of RS485 RTS flags should be set\n",
-				rts_during_tx, rts_during_rx);
-
-		/*
-		 * RTS signal is handled by HW, it's timing can't be influenced.
-		 * However, it's sometimes useful to delay TX even without RTS
-		 * control therefore we try to handle .delay_rts_before_send.
-		 */
-		if (rs485->delay_rts_after_send)
-			return -EINVAL;
-	}
-
-	sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG, mask, efcr);
-
-	port->rs485 = *rs485;
-
-	return 0;
-}
 
 static int sc16is7xx_startup(struct uart_port *port)
 {
@@ -1150,7 +1107,6 @@ static int sc16is7xx_probe(struct device *dev,
 		s->p[i].port.flags	= UPF_FIXED_TYPE | UPF_LOW_LATENCY;
 		s->p[i].port.iotype	= UPIO_PORT;
 		s->p[i].port.uartclk	= freq;
-		s->p[i].port.rs485_config = sc16is7xx_config_rs485;
 		s->p[i].port.ops	= &sc16is7xx_ops;
 		/* Disable all interrupts */
 		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_IER_REG, 0);
