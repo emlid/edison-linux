@@ -38,6 +38,7 @@ static struct i2c_pin_cfg dw_i2c_pin_cfgs[][10] = {
 	},
 	[BOARD_SALTBAY] =  {
 		[1] = {19, 1, 20, 1},
+		[6] = {27, 1, 28, 1},
 	},
 };
 
