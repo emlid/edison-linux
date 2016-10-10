@@ -647,6 +647,13 @@ struct dw_i2c_dev *i2c_dw_setup(struct device *pdev, int bus_idx,
 
 	controller = &dw_controllers[bus_idx];
 
+	/*
+	* a hack to make kernel boot faster by aborting transactions on 6th I2C on Edison
+	* beforehand. Otherwise it would wait for completion (3Hz * jiffies) in xfer method.
+	*/
+
+	intel_mid_dw_i2c_abort(controller->bus_num);
+
 	base = ioremap_nocache(start, len);
 	if (!base) {
 		dev_err(pdev, "I/O memory remapping failed\n");
