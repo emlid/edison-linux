@@ -18,7 +18,6 @@
 #include <linux/intel_pmic_gpio.h>
 #include <linux/spi/spi.h>
 #include <linux/i2c.h>
-#include <linux/i2c/pca953x.h>
 #include <linux/gpio.h>
 #include <linux/gpio_keys.h>
 #include <linux/input.h>
@@ -74,7 +73,6 @@
 #include "device_libs/platform_mpu3050.h"
 #include "device_libs/platform_tc35876x.h"
 #include "device_libs/platform_bq24261.h"
-#include "device_libs/platform_pcal9555a.h"
 #include "device_libs/platform_sc16is7xx.h"
 
 #include "device_libs/platform_wm8994.h"
@@ -105,10 +103,6 @@ struct devs_id __initconst device_ids[] = {
 	 &wifi_platform_data_fastirq},
 
 	/* I2C devices*/
-	{"pcal9555a-1", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
-	{"pcal9555a-2", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
-	{"pcal9555a-3", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
-	{"pcal9555a-4", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
 	{"sc16is7xx", SFI_DEV_TYPE_I2C, 1, &sc16is7xx_platform_data, NULL},
 
 	/* SPI devices */
