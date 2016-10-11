@@ -1278,6 +1278,8 @@ static int sc16is7xx_i2c_probe(struct i2c_client *i2c,
 	struct sc16is7xx_devtype *devtype;
 	unsigned long flags = 0;
 	struct regmap *regmap;
+	int irq = 0;
+
 
 	if (i2c->dev.of_node) {
 		const struct of_device_id *of_id =
@@ -1293,8 +1295,10 @@ static int sc16is7xx_i2c_probe(struct i2c_client *i2c,
 			      (devtype->nr_uart - 1);
 	regmap = devm_regmap_init_i2c(i2c, &regcfg);
 
-	pr_info("irq was %d got %d\n", i2c->irq, gpio_to_irq(i2c->irq));
-	i2c->irq = gpio_to_irq(i2c->irq);
+	/* A hack to bypass Edison limitations such as non existent DT or IFWI hardware description */
+	irq = gpio_to_irq(i2c->irq);
+	dev_dbg(&i2c->dev, "irq was %d got %d\n", i2c->irq, irq);
+	i2c->irq = irq;
 
 	return sc16is7xx_probe(&i2c->dev, devtype, regmap, i2c->irq, flags);
 }
