@@ -44,6 +44,8 @@
 #include <asm/reboot.h>
 #include "intel_mid_weak_decls.h"
 
+#include "device_libs/platform_sc16is7xx.h"
+
 #define	SFI_SIG_OEM0	"OEM0"
 #define MAX_IPCDEVS	24
 #define MAX_SCU_SPI	24
@@ -602,6 +604,9 @@ static int __init intel_mid_platform_init(void)
 	sfi_table_parse(SFI_SIG_OEMB, NULL, NULL, sfi_parse_oemb);
 	sfi_table_parse(SFI_SIG_GPIO, NULL, NULL, sfi_parse_gpio);
 	sfi_table_parse(SFI_SIG_DEVS, NULL, NULL, sfi_parse_devs);
+
+
+	sfi_handle_i2c_dev(&sc16is7xx_table_entry, &sc16is7xx_devs_id);
 
 	return 0;
 }

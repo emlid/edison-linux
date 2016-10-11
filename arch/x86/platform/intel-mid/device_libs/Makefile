@@ -38,6 +38,7 @@ obj-$(subst m,y,$(CONFIG_GPIO_PCA953X)) += platform_tca6416.o
 obj-$(subst m,y,$(CONFIG_BQ24261_CHARGER)) += platform_bq24261.o
 obj-$(subst m,y,$(CONFIG_GPIO_PCA953X)) += platform_pcal9555a.o
 obj-$(subst m,y,$(CONFIG_SND_SOC_WM8994)) += platform_wm8994.o
+obj-y += platform_sc16is7xx.o
 # SPI Devices
 obj-$(subst m,y,$(CONFIG_SERIAL_MRST_MAX3110)) += platform_max3111.o
 obj-$(subst m,y,$(CONFIG_SPI_SPIDEV)) += platform_spidev.o

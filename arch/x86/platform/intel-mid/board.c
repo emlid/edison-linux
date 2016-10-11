@@ -75,6 +75,7 @@
 #include "device_libs/platform_tc35876x.h"
 #include "device_libs/platform_bq24261.h"
 #include "device_libs/platform_pcal9555a.h"
+#include "device_libs/platform_sc16is7xx.h"
 
 #include "device_libs/platform_wm8994.h"
 
@@ -108,6 +109,7 @@ struct devs_id __initconst device_ids[] = {
 	{"pcal9555a-2", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
 	{"pcal9555a-3", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
 	{"pcal9555a-4", SFI_DEV_TYPE_I2C, 1, &pcal9555a_platform_data, NULL},
+	{"sc16is7xx", SFI_DEV_TYPE_I2C, 1, &sc16is7xx_platform_data, NULL},
 
 	/* SPI devices */
 	{"spidev", SFI_DEV_TYPE_SPI, 0, &spidev_platform_data, NULL},
