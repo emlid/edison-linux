@@ -1054,6 +1054,15 @@ static int sc16is7xx_probe(struct device *dev,
 		freq = clk_get_rate(s->clk);
 	}
 
+	/*
+	 * A hack to bypass clock framework on Edison.
+	 * I guess, there's a better way to deal with the issue.
+	 * But I have neiter time nor the will to fix it properly.
+	 * Sorry, guy. At least there's this comment that is hard not
+	 * to notice, right?
+	 * */
+	freq = *pfreq;
+
 	s->regmap = regmap;
 	s->devtype = devtype;
 	dev_set_drvdata(dev, s);
