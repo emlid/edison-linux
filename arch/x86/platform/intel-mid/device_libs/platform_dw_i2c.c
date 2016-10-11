@@ -60,10 +60,13 @@ int intel_mid_dw_i2c_abort(int busnum)
 	}
 
 	if (!pins->scl_gpio || !pins->sda_gpio) {
-		pr_err("i2c-%d: recovery ignore\n", busnum);
+		pr_info("i2c-%d: recovery ignore\n", busnum);
 		return 0;
 	}
-	pr_err("i2c-%d: try to abort xfer, scl_gpio %d, sda_gpio %d\n",
+
+	pr_info("i2c-%d: recovering\n", busnum);
+
+	pr_debug("i2c-%d: try to abort xfer, scl_gpio %d, sda_gpio %d\n",
 			busnum, pins->scl_gpio, pins->sda_gpio);
 	gpio_request(pins->scl_gpio, "scl");
 	gpio_request(pins->sda_gpio, "sda");
@@ -72,20 +75,20 @@ int intel_mid_dw_i2c_abort(int busnum)
 	gpio_direction_input(pins->scl_gpio);
 	gpio_direction_input(pins->sda_gpio);
 	usleep_range(10, 10);
-	pr_err("i2c-%d: scl_gpio val %d, sda_gpio val %d\n",
+	pr_debug("i2c-%d: scl_gpio val %d, sda_gpio val %d\n",
 			busnum,
 			gpio_get_value(pins->scl_gpio) ? 1 : 0,
 			gpio_get_value(pins->sda_gpio) ? 1 : 0);
 	gpio_direction_output(pins->scl_gpio, 1);
-	pr_err("i2c-%d: toggle begin\n", busnum);
+	pr_debug("i2c-%d: toggle begin\n", busnum);
 	for (i = 0; i < 9; i++) {
 		if (gpio_get_value(pins->sda_gpio)) {
 			if (gpio_get_value(pins->scl_gpio)) {
-				pr_err("i2c-%d: recovery success\n", busnum);
+				pr_debug("i2c-%d: recovery success\n", busnum);
 				break;
 			} else {
 				gpio_direction_output(pins->scl_gpio, 0);
-				pr_err("i2c-%d: scl_gpio val 0, sda_gpio val 1\n",
+				pr_debug("i2c-%d: scl_gpio val 0, sda_gpio val 1\n",
 					busnum);
 			}
 		}
@@ -93,9 +96,9 @@ int intel_mid_dw_i2c_abort(int busnum)
 		usleep_range(10, 20);
 		gpio_set_value(pins->scl_gpio, 1);
 		usleep_range(10, 20);
-		pr_err("i2c-%d: toggle SCL loop %d\n", busnum, i);
+		pr_debug("i2c-%d: toggle SCL loop %d\n", busnum, i);
 	}
-	pr_err("i2c-%d: toggle end\n", busnum);
+	pr_debug("i2c-%d: toggle end\n", busnum);
 	gpio_direction_output(pins->scl_gpio, 1);
 	gpio_direction_output(pins->sda_gpio, 0);
 	gpio_set_value(pins->scl_gpio, 0);
