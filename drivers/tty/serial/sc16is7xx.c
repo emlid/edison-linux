@@ -345,11 +345,11 @@ static u8 sc16is7xx_port_read(struct uart_port *port, u8 reg)
 	return val;
 }
 
-static void sc16is7xx_port_write(struct uart_port *port, u8 reg, u8 val)
+static int sc16is7xx_port_write(struct uart_port *port, u8 reg, u8 val)
 {
 	struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
 
-	regmap_write(s->regmap,
+	return regmap_write(s->regmap,
 		     (reg << SC16IS7XX_REG_SHIFT) | port->line, val);
 }
 
@@ -1118,7 +1118,10 @@ static int sc16is7xx_probe(struct device *dev,
 		s->p[i].port.uartclk	= freq;
 		s->p[i].port.ops	= &sc16is7xx_ops;
 		/* Disable all interrupts */
-		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_IER_REG, 0);
+		ret = sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_IER_REG, 0);
+                if (ret < 0) {
+                    goto out_thread;
+                }
 		/* Disable TX/RX */
 		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_EFCR_REG,
 				     SC16IS7XX_EFCR_RXDISABLE_BIT |
