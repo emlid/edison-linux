@@ -380,7 +380,9 @@ static struct attribute_group pmic_attr_group = {
 
 static int pmic_rpmsg_probe(struct rpmsg_channel *rpdev)
 {
+    uint8_t bbchgrcfg_value;
 	int ret = 0;
+    int ret1 = 0;
 
 	if (rpdev == NULL) {
 		pr_err("rpmsg channel not created\n");
@@ -413,7 +415,14 @@ static int pmic_rpmsg_probe(struct rpmsg_channel *rpdev)
 	if (ret) {
 		kobject_put(scu_pmic_kobj);
 		goto rpmsg_err;
-	}
+    }
+
+    ret1 = intel_scu_ipc_ioread8(0x52, &bbchgrcfg_value);
+    printk("Intel SCU IPC ret=%d, reg=%d\n", ret1, bbchgrcfg_value);
+    ret1 = intel_scu_ipc_iowrite8(0x52, 0);
+    printk("Intel SCU IPC ret=%d\n", ret1);
+    ret1 = intel_scu_ipc_ioread8(0x52, &bbchgrcfg_value);
+    printk("Intel SCU IPC ret=%d, reg=%d\n", ret1, bbchgrcfg_value);
 
 	goto out;
 
