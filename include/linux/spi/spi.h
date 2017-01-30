@@ -575,7 +575,6 @@ struct spi_message {
 	/* completion is reported through a callback */
 	void			(*complete)(void *context);
 	void			*context;
-	unsigned		the_max_pkt;
 	unsigned		actual_length;
 	int			status;
 

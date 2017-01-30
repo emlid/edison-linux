@@ -237,7 +237,6 @@ static int spidev_message(struct spidev_data *spidev,
 	 */
 	buf = spidev->buffer;
 	total = 0;
-	msg.the_max_pkt = 0;
 	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
 			n;
 			n--, k_tmp++, u_tmp++) {
@@ -283,8 +282,6 @@ static int spidev_message(struct spidev_data *spidev,
 			u_tmp->delay_usecs,
 			u_tmp->speed_hz ? : spidev->spi->max_speed_hz);
 #endif
-		if (msg.the_max_pkt < k_tmp->len) msg.the_max_pkt = k_tmp->len;
-
 		spi_message_add_tail(k_tmp, &msg);
 	}
 
