@@ -1485,6 +1485,9 @@ config SERIAL_RP2_NR_UARTS
 	  need to be increased.
 
 config SERIAL_SC16IS7XX_CORE
+        tristate
+
+config SERIAL_SC16IS7XX
         tristate "SC16IS7xx serial support"
         select SERIAL_CORE
         depends on (SPI_MASTER && !I2C) || I2C
@@ -1517,6 +1520,7 @@ config SERIAL_SC16IS7XX_SPI
           If required say y, and say n to spi if not required,
           This is additional support to exsisting driver.
           You must select at least one bus for the driver to be built.
+
 
 endmenu
 
