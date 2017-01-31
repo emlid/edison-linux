@@ -1275,6 +1275,7 @@ static struct spi_driver sc16is7xx_spi_uart_driver = {
 MODULE_ALIAS("spi:sc16is7xx");
 #endif
 
+#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
 static int sc16is7xx_i2c_probe(struct i2c_client *i2c,
 			       const struct i2c_device_id *id)
 {
@@ -1335,15 +1336,18 @@ static struct i2c_driver sc16is7xx_i2c_uart_driver = {
 };
 
 MODULE_ALIAS("i2c:sc16is7xx");
+#endif
 
 static int __init sc16is7xx_init(void)
 {
 	int ret = 0;
+#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
 	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
 	if (ret < 0) {
 		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
 		return ret;
 	}
+#endif
 
 #ifdef CONFIG_SERIAL_SC16IS7XX_SPI
 	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
@@ -1358,7 +1362,9 @@ module_init(sc16is7xx_init);
 
 static void __exit sc16is7xx_exit(void)
 {
+#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
 	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
+#endif
 
 #ifdef CONFIG_SERIAL_SC16IS7XX_SPI
 	spi_unregister_driver(&sc16is7xx_spi_uart_driver);
