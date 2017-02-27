@@ -74,6 +74,7 @@
 #include "device_libs/platform_tc35876x.h"
 #include "device_libs/platform_bq24261.h"
 #include "device_libs/platform_sc16is7xx.h"
+#include "device_libs/platform_ltc4156.h"
 
 #include "device_libs/platform_wm8994.h"
 
@@ -104,6 +105,7 @@ struct devs_id __initconst device_ids[] = {
 
 	/* I2C devices*/
 	{"sc16is7xx", SFI_DEV_TYPE_I2C, 1, &sc16is7xx_platform_data, NULL},
+	{"ltc4156", SFI_DEV_TYPE_I2C, 1, &ltc4156_platform_data, NULL},
 
 	/* SPI devices */
 	{"spidev", SFI_DEV_TYPE_SPI, 0, &spidev_platform_data, NULL},

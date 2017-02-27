@@ -45,6 +45,7 @@
 #include "intel_mid_weak_decls.h"
 
 #include "device_libs/platform_sc16is7xx.h"
+#include "device_libs/platform_ltc4156.h"
 
 #define	SFI_SIG_OEM0	"OEM0"
 #define MAX_IPCDEVS	24
@@ -607,6 +608,7 @@ static int __init intel_mid_platform_init(void)
 
 
 	sfi_handle_i2c_dev(&sc16is7xx_table_entry, &sc16is7xx_devs_id);
+	sfi_handle_i2c_dev(&ltc4156_table_entry, &ltc4156_devs_id);
 
 	return 0;
 }
