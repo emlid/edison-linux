@@ -28,18 +28,7 @@ extern int pmic_enable_vbus(bool enable);
 extern int pmic_handle_low_supply(void);
 
 extern void dump_pmic_regs(void);
-#ifdef CONFIG_PMIC_CCSM
 extern int pmic_get_health(void);
 extern int pmic_get_battery_pack_temp(int *);
-#else
-static int pmic_get_health(void)
-{
-	return 0;
-}
-static int pmic_get_battery_pack_temp(int *temp)
-{
-	return 0;
-}
-#endif
 
 #endif
