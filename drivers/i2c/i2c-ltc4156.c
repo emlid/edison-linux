@@ -36,7 +36,10 @@ static struct i2c_driver ltc_driver = {
 static void ltc_probe(struct i2c_client *client,
                       const struct i2c_device_id *id)
 {
-    int ret = i2c_smbus_write_byte_data(client, 0x00, 0x20);
+    int value = i2c_smbus_read_byte_data(client, 0x00);
+
+    /* Write fifth bit to reg */
+    int ret = i2c_smbus_write_byte_data(client, 0x00, (1 << 5) | value);
 
     if (ret < 0) {
         pr_err("ltc4156 probe: write to 0x00, ret=%d\n", ret);
